@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "build": "mkdir -p dist && cp index.html dist/"
   },
   "keywords": ["snake-game", "贪吃蛇", "游戏"],
   "author": "",
