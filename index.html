@@ -455,6 +455,7 @@
       hard: { initialSpeed: 100, minSpeed: 40, speedDecrease: 8, scoreMultiplier: 2, name: '困难' }
     };
     let selectedDifficulty = 'normal';
+    const INITIAL_SPEED = DIFFICULTY[selectedDifficulty].initialSpeed;
 
     // Game State
     let canvas, ctx;
