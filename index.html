@@ -531,7 +531,8 @@
 
       // Difficulty selector
       document.querySelectorAll('#difficultySelector .skin-option').forEach(option => {
-        option.addEventListener('click', () => {
+        option.addEventListener('click', (e) => {
+          e.stopPropagation();
           document.querySelectorAll('#difficultySelector .skin-option').forEach(o => o.classList.remove('selected'));
           option.classList.add('selected');
           selectedDifficulty = option.dataset.difficulty;
