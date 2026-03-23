@@ -519,10 +519,10 @@
       // Keyboard controls
       document.addEventListener('keydown', handleKeyDown);
 
-      // Skin selector
-      document.querySelectorAll('.skin-option').forEach(option => {
+      // Skin selector — scoped to .skin-selector (first one, before difficulty)
+      document.querySelectorAll('.skin-selector:not(#difficultySelector) .skin-option').forEach(option => {
         option.addEventListener('click', () => {
-          document.querySelectorAll('.skin-option').forEach(o => o.classList.remove('selected'));
+          document.querySelectorAll('.skin-selector:not(#difficultySelector) .skin-option').forEach(o => o.classList.remove('selected'));
           option.classList.add('selected');
           selectedSkin = option.dataset.skin;
           updateSkinIndicator();
