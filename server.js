@@ -39,7 +39,7 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, '127.0.0.1', () => {
   console.log(`贪吃蛇游戏服务器运行中: http://localhost:${PORT}`);
   console.log(`按 Ctrl+C 停止服务器`);
 });
