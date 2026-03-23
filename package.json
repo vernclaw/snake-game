@@ -1,0 +1,13 @@
+{
+  "name": "snake-game",
+  "version": "1.0.0",
+  "description": "贪吃蛇游戏介绍网站 - 展示玩法、技巧与策略",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["snake-game", "贪吃蛇", "游戏"],
+  "author": "",
+  "license": "MIT"
+}
