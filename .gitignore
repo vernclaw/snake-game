@@ -25,3 +25,7 @@ Thumbs.db
 
 # Hook output (local running)
 clawd/
+
+# Data files
+scores.json
+package-lock.json
