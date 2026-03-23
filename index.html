@@ -363,6 +363,10 @@
         <div class="skin-dot classic" id="skinDot"></div>
       </div>
       <div class="stat">
+        <span class="stat-label">难度</span>
+        <span class="stat-value" id="difficultyName" style="font-size: 14px;">普通</span>
+      </div>
+      <div class="stat">
         <span class="stat-label">最高分</span>
         <span class="stat-value" id="highScore">0</span>
       </div>
@@ -392,6 +396,19 @@
       <div class="skin-option" data-skin="rainbow">
         <div class="preview rainbow"></div>
         <span class="name">彩虹</span>
+      </div>
+    </div>
+
+    <p style="color: var(--text-muted); margin-bottom: 15px;">选择难度</p>
+    <div class="skin-selector" id="difficultySelector">
+      <div class="skin-option" data-difficulty="easy">
+        <span class="name">简单</span>
+      </div>
+      <div class="skin-option selected" data-difficulty="normal">
+        <span class="name">普通</span>
+      </div>
+      <div class="skin-option" data-difficulty="hard">
+        <span class="name">困难</span>
       </div>
     </div>
 
@@ -430,9 +447,14 @@
     const GRID_SIZE = 20;
     const CANVAS_SIZE = 400;
     const CELL_SIZE = CANVAS_SIZE / GRID_SIZE;
-    const INITIAL_SPEED = 150;
-    const MIN_SPEED = 60;
-    const SPEED_DECREASE = 5;
+
+    // Difficulty Settings
+    const DIFFICULTY = {
+      easy: { initialSpeed: 200, minSpeed: 120, speedDecrease: 3, scoreMultiplier: 1, name: '简单' },
+      normal: { initialSpeed: 150, minSpeed: 60, speedDecrease: 5, scoreMultiplier: 1, name: '普通' },
+      hard: { initialSpeed: 100, minSpeed: 40, speedDecrease: 8, scoreMultiplier: 2, name: '困难' }
+    };
+    let selectedDifficulty = 'normal';
 
     // Game State
     let canvas, ctx;
@@ -450,7 +472,7 @@
 
     // DOM Elements
     let startScreen, gameOverScreen;
-    let currentScoreEl, highScoreEl, skinNameEl, skinDotEl;
+    let currentScoreEl, highScoreEl, skinNameEl, skinDotEl, difficultyNameEl;
     let finalScoreEl, playerNameInput;
     let startLeaderboard, gameOverLeaderboard;
 
@@ -472,6 +494,7 @@
       highScoreEl = document.getElementById('highScore');
       skinNameEl = document.getElementById('skinName');
       skinDotEl = document.getElementById('skinDot');
+      difficultyNameEl = document.getElementById('difficultyName');
       finalScoreEl = document.getElementById('finalScore');
       playerNameInput = document.getElementById('playerName');
       startLeaderboard = document.getElementById('startLeaderboard');
@@ -502,6 +525,15 @@
           option.classList.add('selected');
           selectedSkin = option.dataset.skin;
           updateSkinIndicator();
+        });
+      });
+
+      // Difficulty selector
+      document.querySelectorAll('#difficultySelector .skin-option').forEach(option => {
+        option.addEventListener('click', () => {
+          document.querySelectorAll('#difficultySelector .skin-option').forEach(o => o.classList.remove('selected'));
+          option.classList.add('selected');
+          selectedDifficulty = option.dataset.difficulty;
         });
       });
 
@@ -608,6 +640,9 @@
     }
 
     function startGame() {
+      // Get difficulty settings
+      const diff = DIFFICULTY[selectedDifficulty];
+
       // Reset game state
       snake = [
         { x: Math.floor(GRID_SIZE / 2), y: Math.floor(GRID_SIZE / 2) }
@@ -615,12 +650,13 @@
       direction = { x: 1, y: 0 };
       nextDirection = { x: 1, y: 0 };
       score = 0;
-      gameSpeed = INITIAL_SPEED;
+      gameSpeed = diff.initialSpeed;
       isPlaying = true;
 
       // Update UI
       currentScoreEl.textContent = score;
       updateSkinIndicator();
+      difficultyNameEl.textContent = DIFFICULTY[selectedDifficulty].name;
 
       // Hide start screen
       startScreen.classList.add('hidden');
@@ -671,12 +707,13 @@
 
       // Check food collision
       if (head.x === food.x && head.y === food.y) {
-        score++;
+        const diff = DIFFICULTY[selectedDifficulty];
+        score += diff.scoreMultiplier;
         currentScoreEl.textContent = score;
 
         // Increase speed
-        if (gameSpeed > MIN_SPEED) {
-          gameSpeed = Math.max(MIN_SPEED, gameSpeed - SPEED_DECREASE);
+        if (gameSpeed > diff.minSpeed) {
+          gameSpeed = Math.max(diff.minSpeed, gameSpeed - diff.speedDecrease);
           clearInterval(gameLoop);
           gameLoop = setInterval(update, gameSpeed);
         }
