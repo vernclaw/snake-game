@@ -2,8 +2,21 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 
+// CLI argument parsing
+const args = process.argv.slice(2);
+const cli = {};
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === '--port' && args[i + 1] !== undefined) {
+    cli.port = parseInt(args[++i], 10);
+  } else if (args[i] === '--bind' && args[i + 1] !== undefined) {
+    cli.bind = args[++i];
+  }
+}
+
+const PORT = cli.port ?? 3000;
+const HOST = cli.bind ?? '127.0.0.1';
+
 const app = express();
-const PORT = 3000;
 const SCORES_FILE = path.join(__dirname, 'scores.json');
 
 // Middleware
@@ -91,6 +104,6 @@ app.post('/api/scores', (req, res) => {
 // Initialize and start server
 initScoresFile();
 
-app.listen(PORT, '127.0.0.1', () => {
-  console.log(`Snake Game server running at http://localhost:${PORT}`);
+app.listen(PORT, HOST, () => {
+  console.log(`Snake Game server running at http://${HOST}:${PORT}`);
 });
